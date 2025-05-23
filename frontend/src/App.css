@@ -1,8 +1,9 @@
 .App {
   text-align: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  color: white;
+  background: #181818;
+  color: #f3f3f3;
+  font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
 }
 
 .App-logo {
@@ -17,23 +18,23 @@
 }
 
 .App-header {
-  padding: 2rem;
-  background: rgba(0, 0, 0, 0.2);
+  padding: 2rem 0 1rem 0;
+  background: #181818;
   margin-bottom: 2rem;
 }
 
 .App-header h1 {
   margin: 0;
   font-size: 2.5rem;
-  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #f3f3f3;
+  font-weight: 700;
+  letter-spacing: -1px;
 }
 
 .App-header p {
   margin: 1rem 0 0;
   font-size: 1.2rem;
-  color: #888;
+  color: #b0b0b0;
 }
 
 .App-link {
@@ -51,107 +52,111 @@
 }
 
 main {
-  max-width: 800px;
+  max-width: 480px;
   margin: 0 auto;
   padding: 0 1rem;
 }
 
 .recording-controls {
-  margin: 2rem 0;
+  margin: 2rem 0 1.5rem 0;
 }
 
 .record-button {
-  padding: 1rem 2rem;
-  font-size: 1.2rem;
+  padding: 1rem 2.5rem;
+  font-size: 1.15rem;
   border: none;
-  border-radius: 50px;
-  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-  color: white;
+  border-radius: 12px;
+  background: #222;
+  color: #f3f3f3;
+  font-weight: 600;
+  box-shadow: none;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+  outline: none;
 }
 
-.record-button:hover {
+.record-button:hover,
+.record-button:focus {
+  background: #333;
+  color: #fff;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .record-button.recording {
-  background: linear-gradient(45deg, #ff4757, #ff6b6b);
-  animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-    transform: scale(1.05);
-  }
-
-  100% {
-    transform: scale(1);
-  }
+  background: #e74c3c;
+  color: #fff;
 }
 
 .error-message {
-  background: rgba(255, 71, 87, 0.1);
-  border: 1px solid #ff4757;
-  color: #ff4757;
+  background: #2a1818;
+  border: 1.5px solid #e74c3c;
+  color: #e74c3c;
   padding: 1rem;
-  border-radius: 8px;
-  margin: 1rem 0;
+  border-radius: 10px;
+  margin: 1.5rem 0;
+  font-size: 1.1rem;
 }
 
 .results {
   margin-top: 2rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: #202020;
   border-radius: 12px;
-  padding: 1.5rem;
+  padding: 1.5rem 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
 }
 
 .results h2 {
-  margin: 0 0 1.5rem;
+  margin: 0 0 1.2rem;
   color: #4ecdc4;
+  font-size: 1.3rem;
+  font-weight: 600;
 }
 
 .matches-list {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.2rem;
+  grid-template-columns: 1fr;
 }
 
 .match-item {
-  background: rgba(255, 255, 255, 0.1);
+  background: #232323;
   border-radius: 8px;
-  padding: 1.5rem;
-  transition: transform 0.2s;
+  padding: 1.2rem 1rem;
+  transition: box-shadow 0.2s, transform 0.1s;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid #232323;
 }
 
 .match-item:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.10);
+  border: 1px solid #4ecdc4;
   transform: translateY(-2px);
 }
 
 .match-item h3 {
   margin: 0 0 0.5rem;
-  color: #4ecdc4;
+  color: #f3f3f3;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .match-item p {
-  margin: 0.5rem 0;
-  color: #888;
+  margin: 0.5rem 0 0 0;
+  color: #b0b0b0;
+  font-size: 1rem;
 }
 
 .match-item a {
   display: inline-block;
-  margin-top: 1rem;
-  color: #ff6b6b;
+  margin-top: 0.8rem;
+  color: #4ecdc4;
   text-decoration: none;
   font-weight: 500;
+  font-size: 1rem;
+  border-bottom: 1px solid transparent;
+  transition: border-bottom 0.2s;
 }
 
 .match-item a:hover {
-  text-decoration: underline;
+  border-bottom: 1px solid #4ecdc4;
 }
