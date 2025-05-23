@@ -91,14 +91,16 @@ main {
   text-transform: uppercase;
 }
 
-.record-button:hover,
-.record-button:focus {
-  background: #e74c3c;
+.record-button:not(.recording):hover,
+.record-button:not(.recording):focus {
+  background: #222;
   color: #fff;
   transform: translateY(-2px);
 }
 
-.record-button.recording {
+.record-button.recording,
+.record-button.recording:hover,
+.record-button.recording:focus {
   background: #e74c3c;
   color: #fff;
 }
