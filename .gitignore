@@ -9,3 +9,14 @@ dist
 
 # build
 build
+
+# venv
+venv
+
+# .env
+.env
+
+# .env.local
+.env.local
+
+# .env.development.local
