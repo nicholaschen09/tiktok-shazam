@@ -89,6 +89,9 @@ main {
   transition: background 0.2s, color 0.2s, transform 0.1s;
   outline: none;
   text-transform: uppercase;
+  width: 350px;
+  text-align: center;
+  justify-content: center;
 }
 
 .record-button:not(.recording):hover,
