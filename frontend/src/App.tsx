@@ -12,11 +12,16 @@ function App() {
   const [isRecording, setIsRecording] = useState(false);
   const [matches, setMatches] = useState<SoundMatch[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const recordTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const startRecording = async () => {
     try {
+      setMatches([]);
+      setInfo(null);
+      setError(null);
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
@@ -29,6 +34,9 @@ function App() {
       };
 
       mediaRecorder.onstop = async () => {
+        if (recordTimeoutRef.current) {
+          clearTimeout(recordTimeoutRef.current);
+        }
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
         await identifySound(audioBlob);
       };
@@ -36,6 +44,12 @@ function App() {
       mediaRecorder.start();
       setIsRecording(true);
       setError(null);
+      setInfo('Recording... (max 8 seconds, or stop manually)');
+
+      // Automatically stop after 8 seconds
+      recordTimeoutRef.current = setTimeout(() => {
+        stopRecording();
+      }, 8000);
     } catch (err) {
       setError('Error accessing microphone. Please ensure you have granted microphone permissions.');
       console.error('Error accessing microphone:', err);
@@ -46,11 +60,13 @@ function App() {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
+      setInfo(null);
     }
   };
 
   const identifySound = async (audioBlob: Blob) => {
     try {
+      setInfo('Processing audio...');
       const formData = new FormData();
       formData.append('audio_file', audioBlob, 'recording.webm');
 
@@ -60,14 +76,17 @@ function App() {
       });
 
       const data = await response.json();
-
-      if (data.status === 'success') {
+      setInfo(null);
+      if (data.status === 'success' && data.matches && data.matches.length > 0) {
         setMatches(data.matches);
+        setError(null);
       } else {
-        setError(data.message || 'Error identifying sound');
+        setMatches([]);
+        setError('No recognizable TikTok sound found. Please try again with a clearer or different sound.');
       }
     } catch (err) {
       setError('Error processing audio. Please try again.');
+      setInfo(null);
       console.error('Error processing audio:', err);
     }
   };
@@ -75,7 +94,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>TikTok Sound Identifier</h1>
+        <h1>Shazam but for TikTok Sounds</h1>
         <p>Record audio to identify TikTok sounds</p>
       </header>
 
@@ -84,10 +103,28 @@ function App() {
           <button
             className={`record-button ${isRecording ? 'recording' : ''}`}
             onClick={isRecording ? stopRecording : startRecording}
+            disabled={false}
           >
-            {isRecording ? 'Stop Recording' : 'Start Recording'}
+            {isRecording ? (
+              <>
+                Stop Recording
+                <span className="recording-dots">
+                  <span>.</span>
+                  <span>.</span>
+                  <span>.</span>
+                </span>
+              </>
+            ) : (
+              'Start Recording'
+            )}
           </button>
         </div>
+
+        {info && (
+          <div className="info-message">
+            {info}
+          </div>
+        )}
 
         {error && (
           <div className="error-message">

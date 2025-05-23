@@ -118,6 +118,19 @@ main {
   letter-spacing: 1.5px;
 }
 
+.info-message {
+  background: #f7f7f7;
+  border: 1.5px solid #b0b0b0;
+  color: #7a7a7a;
+  padding: 1.1rem 1rem;
+  border-radius: 12px;
+  margin: 2rem 0;
+  font-size: 1.1rem;
+  font-family: 'Roboto Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
 .results {
   margin-top: 3rem;
   background: #fff;
@@ -195,4 +208,44 @@ main {
 
 .match-item a:hover {
   border-bottom: 1.5px solid #e74c3c;
+}
+
+.recording-dots {
+  display: inline-block;
+  margin-left: 0.3em;
+}
+
+.recording-dots span {
+  display: inline-block;
+  color: #fff;
+  font-size: 1.2em;
+  animation: jump 1s infinite;
+  opacity: 0.3;
+}
+
+.recording-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.recording-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes jump {
+
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.3;
+  }
+
+  30% {
+    transform: translateY(-0.4em);
+    opacity: 1;
+  }
+
+  60% {
+    transform: translateY(0);
+    opacity: 0.3;
+  }
 }
