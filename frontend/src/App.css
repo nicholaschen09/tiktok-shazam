@@ -23,6 +23,7 @@ body,
   background: #f9f7f3;
   margin-bottom: 2rem;
   border-bottom: 1px solid #ececec;
+  text-align: center;
 }
 
 .App-header h1 {
@@ -61,10 +62,16 @@ main {
   max-width: 540px;
   margin: 0 auto;
   padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .recording-controls {
   margin: 3rem 0 2rem 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .record-button {
