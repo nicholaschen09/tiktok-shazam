@@ -122,9 +122,12 @@ main {
   margin-top: 3rem;
   background: #fff;
   border-radius: 18px;
-  padding: 2.2rem 1.5rem;
+  padding: 2.2rem 2rem;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
   border: 1px solid #ececec;
+  max-width: 700px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .results h2 {
@@ -140,6 +143,7 @@ main {
   display: grid;
   gap: 1.5rem;
   grid-template-columns: 1fr;
+  width: 100%;
 }
 
 .match-item {
@@ -148,7 +152,10 @@ main {
   padding: 1.5rem 1.2rem;
   transition: box-shadow 0.2s, transform 0.1s;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-  border: 1px solid #ececec;
+  border: 2px solid #e74c3c;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .match-item:hover {
