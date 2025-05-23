@@ -1,4 +1,5 @@
-body, .App {
+body,
+.App {
   background: #f9f7f3;
   color: #181818;
   font-family: 'Roboto Mono', 'Menlo', 'Monaco', 'Consolas', monospace;
@@ -83,7 +84,8 @@ main {
   text-transform: uppercase;
 }
 
-.record-button:hover, .record-button:focus {
+.record-button:hover,
+.record-button:focus {
   background: #e74c3c;
   color: #fff;
   transform: translateY(-2px);
@@ -112,7 +114,7 @@ main {
   background: #fff;
   border-radius: 18px;
   padding: 2.2rem 1.5rem;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
   border: 1px solid #ececec;
 }
 
@@ -136,12 +138,12 @@ main {
   border-radius: 10px;
   padding: 1.5rem 1.2rem;
   transition: box-shadow 0.2s, transform 0.1s;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
   border: 1px solid #ececec;
 }
 
 .match-item:hover {
-  box-shadow: 0 2px 12px rgba(231,76,60,0.10);
+  box-shadow: 0 2px 12px rgba(231, 76, 60, 0.10);
   border: 1.5px solid #e74c3c;
   transform: translateY(-2px);
 }
