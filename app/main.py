@@ -5,6 +5,7 @@ import numpy as np
 from typing import List, Optional
 import json
 import os
+import subprocess
 
 app = FastAPI(title="TikTok Sound Identifier")
 
@@ -34,9 +35,22 @@ async def identify_sound(audio_file: UploadFile = File(...)):
     with open(file_location, "wb+") as file_object:
         file_object.write(await audio_file.read())
     
+    # Convert webm to wav if needed
+    if file_location.endswith('.webm'):
+        wav_location = file_location.replace('.webm', '.wav')
+        try:
+            subprocess.run([
+                'ffmpeg', '-y', '-i', file_location, wav_location
+            ], check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            file_to_process = wav_location
+        except Exception as e:
+            return {"status": "error", "message": f"ffmpeg conversion failed: {str(e)}"}
+    else:
+        file_to_process = file_location
+    
     try:
         # Load and process the audio file
-        y, sr = librosa.load(file_location)
+        y, sr = librosa.load(file_to_process)
         
         # Extract audio features
         # 1. Mel-frequency cepstral coefficients (MFCCs)
@@ -75,9 +89,11 @@ async def identify_sound(audio_file: UploadFile = File(...)):
         return {"status": "error", "message": str(e)}
     
     finally:
-        # Clean up the temporary file
+        # Clean up the temporary files
         if os.path.exists(file_location):
             os.remove(file_location)
+        if file_location.endswith('.webm') and os.path.exists(wav_location):
+            os.remove(wav_location)
 
 if __name__ == "__main__":
     import uvicorn
