@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import './App.css';
 
 interface SoundMatch {
@@ -13,19 +13,45 @@ function App() {
   const [matches, setMatches] = useState<SoundMatch[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+  const [volume, setVolume] = useState(0);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const recordTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const animationFrameRef = useRef<number | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
 
   const startRecording = async () => {
     try {
       setMatches([]);
       setInfo(null);
       setError(null);
+      setVolume(0);
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
       audioChunksRef.current = [];
+
+      // --- Sound bar visualizer setup ---
+      audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      sourceRef.current = audioContextRef.current.createMediaStreamSource(stream);
+      analyserRef.current = audioContextRef.current.createAnalyser();
+      analyserRef.current.fftSize = 256;
+      sourceRef.current.connect(analyserRef.current);
+
+      const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
+      const updateVolume = () => {
+        if (analyserRef.current) {
+          analyserRef.current.getByteFrequencyData(dataArray);
+          // Use average volume
+          const avg = dataArray.reduce((a, b) => a + b, 0) / dataArray.length;
+          setVolume(avg);
+        }
+        animationFrameRef.current = requestAnimationFrame(updateVolume);
+      };
+      updateVolume();
+      // --- End sound bar setup ---
 
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -36,7 +62,17 @@ function App() {
       mediaRecorder.onstop = async () => {
         if (recordTimeoutRef.current) {
           clearTimeout(recordTimeoutRef.current);
+          recordTimeoutRef.current = null;
         }
+        // --- Clean up audio context ---
+        if (animationFrameRef.current) {
+          cancelAnimationFrame(animationFrameRef.current);
+        }
+        if (audioContextRef.current) {
+          audioContextRef.current.close();
+        }
+        setVolume(0);
+        // --- End clean up ---
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
         await identifySound(audioBlob);
       };
@@ -91,6 +127,18 @@ function App() {
     }
   };
 
+  // Clean up on unmount
+  useEffect(() => {
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+    };
+  }, []);
+
   return (
     <div className="App">
       <header className="App-header">
@@ -119,6 +167,23 @@ function App() {
             )}
           </button>
         </div>
+        {/* Sound bar visualizer */}
+        {isRecording && (
+          <div className="sound-bars">
+            {[...Array(12)].map((_, i) => {
+              // Spread the bars across the volume range
+              const barHeight = Math.max(8, (volume / 128) * (20 + i * 6));
+              return (
+                <div
+                  key={i}
+                  className="sound-bar"
+                  style={{ height: `${barHeight}px` }}
+                />
+              );
+            })}
+          </div>
+        )}
+        {/* End sound bar visualizer */}
 
         {info && (
           <div className="info-message">
