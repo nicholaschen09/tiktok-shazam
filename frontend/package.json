@@ -22,7 +22,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "docker": "docker build -t tiktok-shazam .. && docker run -p 80:80 tiktok-shazam"
+    "docker": "docker build -t tiktok-shazam .. && docker run -p 80:80 tiktok-shazam",
+    "docker:up": "docker-compose up --build",
+    "docker:down": "docker-compose down"
   },
   "eslintConfig": {
     "extends": [
